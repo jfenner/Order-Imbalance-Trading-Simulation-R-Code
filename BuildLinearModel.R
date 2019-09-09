@@ -1,13 +1,13 @@
-source (file = ' BuildLinearData.R')
+source (file ='BuildLinearData.R')
 BuildLinearModel <-
-  function (key ,
-            data ,
+  function (key,
+            data,
             full.day = T,
             morning = T,
             open.int = F,
             delay = 20,
             lags = 5,
-            strategy = '',
+            strategy ='',
             functions = NULL) {
     # check if we need a full - day linear model or for a single trading session
     if (full.day == T) {
@@ -59,14 +59,14 @@ BuildLinearModel <-
       OIR <- trading.data$OIR
       time.secs <- trading.data$time.secs
       mid.price <- trading.data$mid.price
-      
+
       spread <- trading.data$spread
       AvgTrade.price <- trading.data$AvgTrade.price
       MPB <- trading.data$MPB
       trading.data <- trading.data$data
     }
-    
-    
+
+
     ## build the features matrix (x- variable ) based on strategy
     ## transform the variables if necessary
     identity <- function (x)
@@ -74,38 +74,34 @@ BuildLinearModel <-
     inverse <- function (x)
       1 / x
     f.VOI <-
-      if (is.null (functions [['VOI ']]))
+      if (is.null (functions [['VOI']]))
         identity
     else
-      functions [['VOI ']]
+      functions [['VOI']]
     f.OIR <-
-      if (is.null (functions [['OIR ']]))
+      if (is.null (functions [['OIR']]))
         identity
     else
-      functions [['OIR ']]
-    
+      functions [['OIR']]
+
     ## build the explanatory variables
     x <- list ()
     x[['A']] <- data.frame (y = dMid.Response , VOI = f.VOI(VOI))
     x[['B']] <-
       data.frame (
-        y = dMid.Response ,
-        VOI = f.VOI(VOI) / spread ,
-        OIR = f.OIR (OIR) /
-          spread ,
-        MPB = MPB [, 1] / spread
+        y = dMid.Response,
+        VOI = f.VOI(VOI) / spread,
+        OIR = f.OIR(OIR) / spread,
+        MPB = MPB[,1] / spread
       )
-    
-    value <- {
-      
-    }
+
+    value <- {}
     # build the linear model using OLS
     if (strategy != '') {
       s <- strategy
       value$model <- lm(y ~ ., data = x[[s]])
-      
     }
-    
+
     ## return values
     value$dMid.Response <- dMid.Response ## y- value
     value$VOI <- VOI
@@ -118,7 +114,6 @@ BuildLinearModel <-
     value$mid.price <- mid.price
     value$MPB <- MPB
     value$time.secs <- time.secs
-    
-    
+
     return (value)
   }

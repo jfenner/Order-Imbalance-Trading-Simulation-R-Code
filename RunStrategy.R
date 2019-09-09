@@ -1,6 +1,6 @@
 load (file = 'DataSet.RData ')
-source (' BuildLinearModel.R')
-source (' LinearStrategy.R')
+source ('BuildLinearModel.R')
+source ('LinearStrategy.R')
 # ### AVERAGED LAG LINEAR STRATEGY ####
 ## set trading and model parameters
 threshold <- 0.2
@@ -18,8 +18,7 @@ for (i in 1:length (data)) {
       data [[i]],
       full.day = T,
       delay = period ,
-      lags = lags
-      ,
+      lags = lags,
       strategy = strategy
     )
   model <- value$model
